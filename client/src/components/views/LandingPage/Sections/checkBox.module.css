@@ -1,0 +1,9 @@
+.check {
+}
+
+.CheckBox {
+  display: grid;
+  grid-template-columns: repeat(3);
+  height: 100px;
+  width: 100%;
+}

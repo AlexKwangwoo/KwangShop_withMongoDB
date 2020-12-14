@@ -7,15 +7,28 @@ import ImageSlider from "../../utils/ImageSlider";
 import Checkbox from "./Sections/CheckBox";
 import Radiobox from "./Sections/RadioBox";
 import SearchFeature from "./Sections/SearchFeature";
-import { continents, price } from "./Sections/Datas";
+import { itemType, color, size, price } from "./Sections/Datas";
+import styles from "./LandingPage.module.css";
+import Main1 from "../../ImageData/Main1.jpg";
+import Main2 from "../../ImageData/Main2.jpg";
+import Main3 from "../../ImageData/Main3.jpg";
+import Main4 from "../../ImageData/Main4.jpg";
+import Main5 from "../../ImageData/Main5.jpg";
+import Main6 from "../../ImageData/Main6.jpg";
+import Main7 from "../../ImageData/Main7.jpg";
+import Big1 from "../../ImageData/UnderNewarrival/Big1.jpg";
+import Big2 from "../../ImageData/UnderNewarrival/Big2.jpg";
+import UnderMainImage from "../UnderMainImage/UnderMainImage";
+import Best from "../Best/Best";
+import { trimText } from "../../utils/utils";
 
 function LandingPage() {
   const [Products, setProducts] = useState([]);
   const [Skip, setSkip] = useState(0);
-  const [Limit, setLimit] = useState(8);
+  const [Limit, setLimit] = useState(16);
   const [PostSize, setPostSize] = useState(0);
   const [Filters, setFilters] = useState({
-    continents: [],
+    itemType: [],
     price: [],
   });
   const [SearchTerm, setSearchTerm] = useState("");
@@ -60,7 +73,7 @@ function LandingPage() {
 
   const renderCards = Products.map((product, index) => {
     return (
-      <Col lg={6} md={8} xs={24} key={index}>
+      <div className={styles.cardInBox}>
         {/* 한칸이 24면..lg=>큰화면일때 4개가 들어가고 가장작을때 1개만 드러간다! */}
         <Card
           cover={
@@ -69,9 +82,13 @@ function LandingPage() {
             </a>
           }
         >
-          <Meta title={product.title} description={`$${product.price}`} />
+          <div className={styles.MetaBox}>
+            <span className={styles.title}>{trimText(product.title, 30)}</span>
+            <br />${product.price}
+            {/* <Meta title={product.title} description={`$${product.price}`} /> */}
+          </div>
         </Card>
-      </Col>
+      </div>
     );
   });
 
@@ -103,7 +120,7 @@ function LandingPage() {
     const newFilters = { ...Filters };
 
     newFilters[category] = filters;
-
+    console.log("newFilters", newFilters);
     console.log("filters", filters);
 
     if (category === "price") {
@@ -127,33 +144,51 @@ function LandingPage() {
     getProducts(body);
   };
 
+  const MainImages = [Main1, Main2, Main3, Main4, Main5, Main6, Main7];
   return (
-    <div style={{ width: "75%", margin: "3rem auto" }}>
-      <div style={{ textAlign: "center" }}>
-        <h2>
-          Let's Travel Anywhere <Icon type="rocket" />{" "}
-        </h2>
+    <div
+      style={{
+        width: "75%",
+        margin: "auto",
+        marginTop: "-69px",
+        marginBottom: "140px",
+      }}
+    >
+      <div>
+        {/* 한칸이 24면..lg=>큰화면일때 4개가 들어가고 가장작을때 1개만 드러간다! */}
+        <a href="/">
+          <Carousel autoplay>
+            {MainImages.map((image, index) => (
+              <div key={index}>
+                <img style={{ width: "100%" }} src={image} />
+              </div>
+            ))}
+          </Carousel>
+        </a>
       </div>
-
-      {/* Filter */}
-      {/* gutter은 마진이라 보면됨! */}
-      <Row gutter={[16, 16]}>
-        <Col lg={12} xs={24}>
-          {/* CheckBox */}
-          <Checkbox
-            list={continents} //
-            handleFilters={(filters) => handleFilters(filters, "continents")}
-          />
-        </Col>
-        <Col lg={12} xs={24}>
-          {/* RadioBox */}
-          <Radiobox
-            list={price}
-            handleFilters={(filters) => handleFilters(filters, "price")}
-          />
-        </Col>
-      </Row>
-
+      <div>
+        <UnderMainImage />
+      </div>
+      <div className={styles.FilterBox}>
+        {/* Filter */}
+        {/* gutter은 마진이라 보면됨! */}
+        <Row gutter={[16, 16]}>
+          <Col lg={12} xs={24}>
+            {/* CheckBox */}
+            <Checkbox
+              list={itemType} //
+              handleFilters={(filters) => handleFilters(filters, "itemType")}
+            />
+          </Col>
+          <Col lg={12} xs={24}>
+            {/* RadioBox */}
+            <Radiobox
+              list={price}
+              handleFilters={(filters) => handleFilters(filters, "price")}
+            />
+          </Col>
+        </Row>
+      </div>
       {/* Search */}
 
       <div
@@ -165,16 +200,50 @@ function LandingPage() {
       >
         <SearchFeature refreshFunction={updateSearchTerm} />
       </div>
+      <div className={styles.Best}>
+        <h2 className={styles.TitleUnder}>BEST</h2>
+        <div className={styles.cardbox}>{renderCards}</div>
+        <Best />
+      </div>
+      <div className={styles.Arrivals}>
+        <h2 className={styles.TitleUnder}>NEW ARRIVALS</h2>
+        <div className={styles.cardbox}>{renderCards}</div>
+        <Best />
+      </div>
+      <div className={styles.TwoPic}>
+        <img className={styles.oneInsidePic} src={Big1} />
+        <img className={styles.twoInsidePic} src={Big2} />
+      </div>
+      <div className={styles.Hot}>
+        <h2 className={styles.TitleUnder}>HOT</h2>
+        <div className={styles.cardbox}>{renderCards}</div>
+        <Best />
+      </div>
+      {/* <div style={{ textAlign: "center" }}>
+        <h2>
+          Let's Travel Anywhere <Icon type="rocket" />
+        </h2>
+      </div> */}
 
       {/* Cards */}
-
-      <Row gutter={[16, 16]}>{renderCards}</Row>
+      {/* 
+      <div className={styles.Hot}>
+        <h2 className={styles.TitleUnder}>HrOT</h2>
+        <div className={styles.cardbox}>{renderCards}</div>
+        <Best />
+      </div> */}
 
       <br />
       {/* 더보기 할수있는 데이터가 있을때 나타날것이다! 라우터 프로덕에 postSize가 있음!*/}
       {PostSize >= Limit && (
-        <div style={{ display: "flex", justifyContent: "center" }}>
-          <button onClick={loadMoreHanlder}>더보기</button>
+        <div
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "-80px",
+          }}
+        >
+          <button onClick={loadMoreHanlder}>See More</button>
         </div>
       )}
     </div>

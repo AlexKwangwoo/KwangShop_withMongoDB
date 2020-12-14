@@ -2,10 +2,10 @@ const express = require("express");
 const router = express.Router();
 const { User } = require("../models/User");
 const { Product } = require("../models/Product");
-// const { Payment } = require("../models/Payment");
+const { Payment } = require("../models/Payment");
 
 const { auth } = require("../middleware/auth");
-// const async = require("async");
+const async = require("async");
 
 //=================================
 //             User
@@ -160,79 +160,85 @@ router.get("/removeFromCart", auth, (req, res) => {
   );
 });
 
-// router.post('/successBuy', auth, (req, res) => {
+//여기서 user몽고의 history 내용도 넣고 payment몽고디비의 내용도 넣는다
+router.post("/successBuy", auth, (req, res) => {
+  //1. User Collection 안에  History 필드 안에  간단한 결제 정보 넣어주기
+  let history = [];
+  let transactionData = {};
 
-//     //1. User Collection 안에  History 필드 안에  간단한 결제 정보 넣어주기
-//     let history = [];
-//     let transactionData = {};
+  req.body.cartDetail.forEach((item) => {
+    history.push({
+      dateOfPurchase: Date.now(),
+      name: item.title,
+      id: item._id,
+      price: item.price,
+      quantity: item.quantity,
+      paymentId: req.body.paymentData.paymentID,
+    });
+  });
 
-//     req.body.cartDetail.forEach((item) => {
-//         history.push({
-//             dateOfPurchase: Date.now(),
-//             name: item.title,
-//             id: item._id,
-//             price: item.price,
-//             quantity: item.quantity,
-//             paymentId: req.body.paymentData.paymentID
-//         })
-//     })
+  //2. Payment Collection 안에  자세한 결제 정보들 넣어주기
+  transactionData.user = {
+    id: req.user._id,
+    name: req.user.name,
+    email: req.user.email,
+  }; //미들웨어 통해서 오는 정보들임! auth
 
-//     //2. Payment Collection 안에  자세한 결제 정보들 넣어주기
-//     transactionData.user = {
-//         id: req.user._id,
-//         name: req.user.name,
-//         email: req.user.email
-//     }
+  transactionData.data = req.body.paymentData;
+  transactionData.product = history;
 
-//     transactionData.data = req.body.paymentData
-//     transactionData.product = history
+  //history 정보 저장
+  User.findOneAndUpdate(
+    { _id: req.user._id },
+    { $push: { history: history }, $set: { cart: [] } }, //변화 할정보 set
+    //set은 다 지우는것이다..결제후에는 지워야하기 때문에!!
+    { new: true }, //업데이트!
+    (err, user) => {
+      //업데이트정보 user에 넣어줌!
+      if (err) return res.json({ success: false, err });
 
-//     //history 정보 저장
-//     User.findOneAndUpdate(
-//         { _id: req.user._id },
-//         { $push: { history: history }, $set: { cart: [] } },
-//         { new: true },
-//         (err, user) => {
-//             if (err) return res.json({ success: false, err })
+      //payment에다가  transactionData정보 저장
+      const payment = new Payment(transactionData); //모델 가져오는것임!
+      payment.save((err, doc) => {
+        if (err) return res.json({ success: false, err });
 
-//             //payment에다가  transactionData정보 저장
-//             const payment = new Payment(transactionData)
-//             payment.save((err, doc) => {
-//                 if (err) return res.json({ success: false, err })
+        //3. Product Collection 안에 있는 sold 필드 정보 업데이트 시켜주기
 
-//                 //3. Product Collection 안에 있는 sold 필드 정보 업데이트 시켜주기
+        //상품 당 몇개의 quantity를 샀는지
 
-//                 //상품 당 몇개의 quantity를 샀는지
+        let products = [];
+        doc.product.forEach((item) => {
+          products.push({ id: item.id, quantity: item.quantity });
+        });
 
-//                 let products = [];
-//                 doc.product.forEach(item => {
-//                     products.push({ id: item.id, quantity: item.quantity })
-//                 })
-
-//                 async.eachSeries(products, (item, callback) => {
-
-//                     Product.update(
-//                         { _id: item.id },
-//                         {
-//                             $inc: {
-//                                 "sold": item.quantity
-//                             }
-//                         },
-//                         { new: false },
-//                         callback
-//                     )
-//                 }, (err) => {
-//                     if (err) return res.status(400).json({ success: false, err })
-//                     res.status(200).json({
-//                         success: true,
-//                         cart: user.cart,
-//                         cartDetail: []
-//                     })
-//                 }
-//                 )
-//             })
-//         }
-//     )
-// })
+        async.eachSeries(
+          //products 의 하나하나 객체를 item에 넣음!
+          products,
+          (item, callback) => {
+            Product.update(
+              { _id: item.id }, //몽고디비product업데이트.. id찾고!
+              {
+                $inc: {
+                  sold: item.quantity, //몽고디비product업데이트.. id찾고! 수량업데이트
+                },
+              },
+              { new: false }, //구지 업데이트 바로 보여주지 않아도 돼서 괜찮음!
+              callback //이걸 통해 다시 id: item.id로 돌아감!
+            );
+          },
+          (err) => {
+            if (err) return res.status(400).json({ success: false, err });
+            res.status(200).json({
+              success: true,
+              cart: user.cart,
+              //맨튀...리덕스 user정보안에 cart가 있어서.. cart를 업데이트해줌
+              cartDetail: [],
+            });
+          }
+        );
+      });
+    }
+  );
+});
 
 module.exports = router;

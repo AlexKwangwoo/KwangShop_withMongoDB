@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductImage from "./Sections/ProductImage";
 import ProductInfo from "./Sections/ProductInfo";
+import styles from "./DetailProductPage.module.css";
 import { Row, Col } from "antd";
 
 function DetailProductPage(props) {
@@ -20,23 +21,30 @@ function DetailProductPage(props) {
   }, []);
 
   return (
-    <div style={{ width: "100%", padding: "3rem 4rem" }}>
-      <div style={{ display: "flex", justifyContent: "center" }}>
+    <div
+      style={{
+        width: "75%",
+        padding: "3rem 4rem",
+        margin: "auto",
+        marginTop: "-4%",
+      }}
+    >
+      {/* <div style={{ display: "flex", justifyContent: "center" }}>
         <h1>{Product.title}</h1>
-      </div>
+      </div> */}
 
       <br />
-
-      <Row gutter={[16, 16]}>
-        <Col lg={12} sm={24}>
+      <div className={styles.box}>
+        <div className={styles.imageBox}>
           {/* ProductImage */}
           <ProductImage detail={Product} />
-        </Col>
-        <Col lg={12} sm={24}>
+          {/* </Col> */}
+        </div>
+        <div className={styles.info}>
           {/* ProductInfo */}
           <ProductInfo detail={Product} />
-        </Col>
-      </Row>
+        </div>
+      </div>
     </div>
   );
 }

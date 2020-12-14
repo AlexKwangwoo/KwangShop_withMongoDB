@@ -1,0 +1,65 @@
+.Box {
+  margin-top: 40px;
+  width: 100%;
+  height: 270px;
+  border-top: solid 2px black;
+}
+.Foot {
+  margin: auto;
+  width: 70%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.One {
+  border-right: solid 1px #ededed;
+  width: 30%;
+  padding: 10px;
+  margin: 20px;
+}
+
+.Two {
+  border-right: solid 1px #ededed;
+  width: 25%;
+  margin: 20px;
+  padding: 10px;
+}
+
+.Three {
+  width: 45%;
+  margin: 20px;
+  padding: 10px;
+}
+
+.hSmall {
+  font-weight: 400;
+}
+
+.tSmall {
+  font-weight: 600;
+}
+
+.hSmall2 {
+  font-weight: 400;
+  margin-bottom: 20px;
+}
+
+.tSmall2 {
+  font-weight: 600;
+  margin-bottom: 20px;
+}
+
+.hSmall3 {
+  font-weight: 400;
+  margin-bottom: 15px;
+}
+
+.tSmall3 {
+  font-weight: 600;
+  margin-bottom: 15px;
+}
+
+.card {
+  margin-top: 8px;
+}

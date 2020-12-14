@@ -43,7 +43,7 @@ function FileUpload(props) {
           <div
             style={{
               width: 300,
-              height: 240,
+              height: 500,
               border: "1px solid lightgray",
               display: "flex",
               alignItems: "center",
@@ -61,14 +61,14 @@ function FileUpload(props) {
         style={{
           display: "flex",
           width: "350px",
-          height: "240px",
+          height: "500px",
           overflowX: "scroll",
         }}
       >
         {Images.map((image, index) => (
           <div onClick={() => deleteHandler(image)} key={index}>
             <img
-              style={{ minWidth: "300px", width: "300px", height: "240px" }}
+              style={{ minWidth: "350px", width: "350px", height: "500px" }}
               src={`http://localhost:5000/${image}`}
               // 이경로는 uploads루트쪽 파일에 저장을해서 path를 받아옴..아직 db저장안했음
             />

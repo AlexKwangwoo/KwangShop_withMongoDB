@@ -1,0 +1,14 @@
+.imageBox {
+  width: 50%;
+  padding-left: 15%;
+  padding-right: 4%;
+}
+.info {
+  width: 50%;
+  padding-left: 4%;
+  padding-right: 15%;
+}
+
+.box {
+  display: flex;
+}

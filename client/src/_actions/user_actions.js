@@ -62,7 +62,7 @@ export function addToCart(id) {
   const request = axios
     .post(`${USER_SERVER}/addToCart`, body)
     .then((response) => response.data);
-
+  alert("It has been added to the cart.");
   return {
     type: ADD_TO_CART,
     payload: request,

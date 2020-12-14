@@ -1,0 +1,49 @@
+.menu {
+  width: 100%;
+  border-bottom: solid 1px #e8e8e8;
+  height: 68px;
+  text-align: center;
+  font-weight: 600;
+  color: black;
+}
+
+.menu__mobile_button {
+  float: right;
+  height: 32px;
+  padding: 6px;
+  margin-top: 8px;
+  display: none !important; /* use of important to overwrite ant-btn */
+  background: #3e91f7;
+}
+
+@media (max-width: 1350px) {
+  .menu {
+    height: 50px;
+
+    padding-right: 11.5%;
+    text-align: right;
+  }
+  .menu__mobile_button {
+    display: inline-block !important;
+    text-align: center;
+    background-color: black;
+    border: none;
+  }
+
+  .menuInside {
+    display: none;
+  }
+
+  .menu__logo a {
+    margin-left: -20px;
+  }
+
+  .menu__container .ant-menu-item,
+  .menu__container .ant-menu-submenu-title {
+    padding: 1px 20px;
+  }
+
+  .menu__logo a {
+    padding: 10px 20px;
+  }
+}

@@ -1,8 +1,10 @@
 import React from "react";
 import PaypalExpressBtn from "react-paypal-express-checkout";
 
+//npm paypal express 문서에서 다 가져온 내용이다!
 export default class Paypal extends React.Component {
   render() {
+    //성공하면 payment정보를 준다!
     const onSuccess = (payment) => {
       // Congratulation, it came here means everything's fine!
       console.log("The payment was succeeded!", payment);
@@ -31,7 +33,7 @@ export default class Paypal extends React.Component {
 
     const client = {
       sandbox:
-        "ATHoaUPgCKoNOD4pExA8Nx_lszXC5VN2QPGdswTRv5i_v0VPFVIs8jCGdVmcZuMwWNHeV10Z1RMDXhRl",
+        "ATjxKQh82UuufjkpSmmqtLDgaAJQ2y54tpDz3Uf7WaDbg-FdW0MIZLuNlJ8PMoz1_55rI0HpwsLKi3Li",
       production: "YOUR-PRODUCTION-APP-ID",
     };
     // In order to get production's app-ID, you will have to send your app to Paypal for approval first
@@ -52,10 +54,11 @@ export default class Paypal extends React.Component {
         onCancel={onCancel}
         style={{
           size: "large",
-          color: "blue",
+          color: "gold",
           shape: "rect",
           label: "checkout",
         }}
+        // 스타일을 넣어 노란색에서 파랑으로 바꿈
       />
     );
   }

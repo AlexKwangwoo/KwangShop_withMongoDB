@@ -2,23 +2,189 @@ import React, { useState } from "react";
 import { Typography, Button, Form, Input } from "antd";
 import FileUpload from "../../utils/FileUpload";
 import Axios from "axios";
+import styles from "./UploadProductPage.module.css";
 const { TextArea } = Input;
 
-const Continents = [
-  { key: 1, value: "Africa" },
-  { key: 2, value: "Europe" },
-  { key: 3, value: "Asia" },
-  { key: 4, value: "North America" },
-  { key: 5, value: "South America" },
-  { key: 6, value: "Australia" },
-  { key: 7, value: "Antarctica" },
+const itemTypes = [
+  {
+    key: 1,
+    value: "BEST",
+  },
+  {
+    key: 2,
+    value: "NEW~20%",
+  },
+  {
+    key: 3,
+    value: "HOT",
+  },
+  {
+    key: 4,
+    value: "CODISET",
+  },
+  {
+    key: 5,
+    value: "TOP SWEATSHIRT",
+  },
+  {
+    key: 6,
+    value: "TOP KNIT",
+  },
+  {
+    key: 7,
+    value: "TOP LONG SLEEVED",
+  },
+  {
+    key: 8,
+    value: "TOP SLEEVELESS",
+  },
+  {
+    key: 9,
+    value: "TOP SHORT SLEEVED",
+  },
+  {
+    key: 10,
+    value: "TOP PRINTING",
+  },
+  {
+    key: 11,
+    value: "PANTS SLACKS",
+  },
+  {
+    key: 12,
+    value: "PANTS COTTON",
+  },
+  {
+    key: 13,
+    value: "PANTS JEANS",
+  },
+  {
+    key: 14,
+    value: "PANTS BANDING",
+  },
+  {
+    key: 15,
+    value: "PANTS SHORTS",
+  },
+  {
+    key: 16,
+    value: "SHIRTS BASIC",
+  },
+  {
+    key: 17,
+    value: "SHIRTS DENIM SHIRTS",
+  },
+  {
+    key: 18,
+    value: "SHIRTS CHECK&PATTERNS",
+  },
+  {
+    key: 19,
+    value: "SHIRTS STRIPE",
+  },
+  {
+    key: 20,
+    value: "SHIRTS HENLE NECK&CHINA",
+  },
+  {
+    key: 21,
+    value: "OUTER PADDING",
+  },
+  {
+    key: 22,
+    value: "OUTER COAT",
+  },
+  {
+    key: 23,
+    value: "OUTER SUIT&BLAZER",
+  },
+  {
+    key: 24,
+    value: "OUTER JACKETS",
+  },
+  {
+    key: 25,
+    value: "OUTER JACKETS/MA-1",
+  },
+  {
+    key: 26,
+    value: "OUTER CARDIGAN&VEST",
+  },
+  {
+    key: 27,
+    value: "OUTER HOODIE&ZIPUP",
+  },
+  {
+    key: 28,
+    value: "SHOES SNEAKERS",
+  },
+  {
+    key: 29,
+    value: "SHOES LOAFER&SHOES",
+  },
+  {
+    key: 30,
+    value: "SHOES HEIGHT-HIGH SHOES",
+  },
+  {
+    key: 31,
+    value: "SHOES SLIPPER&FLIP-FLOP",
+  },
+  {
+    key: 32,
+    value: "BAG BACKPACK",
+  },
+  {
+    key: 33,
+    value: "BAG TOTE&SHOULDER",
+  },
+  {
+    key: 34,
+    value: "BAG CROSS BAG",
+  },
+  {
+    key: 35,
+    value: "BAG CLUTCH",
+  },
+  {
+    key: 36,
+    value: "ACC SOCKS&NECKTIE",
+  },
+  {
+    key: 37,
+    value: "ACC HAT",
+  },
+  {
+    key: 38,
+    value: "ACC MUFFLER&GLOVES",
+  },
+  {
+    key: 39,
+    value: "ACC EYEWEAR",
+  },
+  {
+    key: 40,
+    value: "ACC BELT&WATCH",
+  },
+  {
+    key: 41,
+    value: "ACC ETC",
+  },
+  {
+    key: 42,
+    value: "LIFE",
+  },
+  {
+    key: 43,
+    value: "BIG",
+  },
 ];
 
 function UploadProductPage(props) {
   const [Title, setTitle] = useState("");
   const [Description, setDescription] = useState("");
   const [Price, setPrice] = useState(0);
-  const [Continent, setContinent] = useState(1);
+  const [ItemType, setItemType] = useState(1);
   const [Images, setImages] = useState([]);
 
   const titleChangeHandler = (event) => {
@@ -33,8 +199,8 @@ function UploadProductPage(props) {
     setPrice(event.currentTarget.value);
   };
 
-  const continentChangeHandler = (event) => {
-    setContinent(event.currentTarget.value);
+  const itemTypeChangeHandler = (event) => {
+    setItemType(event.currentTarget.value);
   };
 
   const updateImages = (newImages) => {
@@ -44,7 +210,7 @@ function UploadProductPage(props) {
   const submitHandler = (event) => {
     event.preventDefault();
 
-    if (!Title || !Description || !Price || !Continent || Images.length === 0) {
+    if (!Title || !Description || !Price || !ItemType || Images.length === 0) {
       return alert(" 모든 값을 넣어주셔야 합니다.");
     }
 
@@ -57,24 +223,24 @@ function UploadProductPage(props) {
       description: Description,
       price: Price,
       images: Images,
-      continents: Continent,
+      itemTypes: ItemType,
     };
 
     //바디를 백엔드를 보내고.. 결과값을 reponse로 받는다!
     Axios.post("/api/product", body).then((response) => {
       if (response.data.success) {
-        alert("상품 업로드에 성공 했습니다.");
+        alert("Successfully uploaded product.");
         props.history.push("/");
       } else {
-        alert("상품 업로드에 실패 했습니다.");
+        alert("Failed to upload product.");
       }
     });
   };
 
   return (
-    <div style={{ maxWidth: "700px", margin: "2rem auto" }}>
+    <div style={{ maxWidth: "700px", margin: "0 auto", marginBottom: "150px" }}>
       <div style={{ textAlign: "center", marginBottom: "2rem" }}>
-        <h2> 여행 상품 업로드</h2>
+        <h2> Upload Item </h2>
       </div>
 
       <Form onSubmit={submitHandler}>
@@ -83,20 +249,25 @@ function UploadProductPage(props) {
 
         <br />
         <br />
-        <label>이름</label>
+        <label className={styles.title}>ItemName</label>
         <Input onChange={titleChangeHandler} value={Title} />
         <br />
         <br />
-        <label>설명</label>
+        <label className={styles.title}>Description</label>
         <TextArea onChange={descriptionChangeHandler} value={Description} />
         <br />
         <br />
-        <label>가격($)</label>
+        <label className={styles.title}>Price($)</label>
         <Input type="number" onChange={priceChangeHandler} value={Price} />
         <br />
         <br />
-        <select onChange={continentChangeHandler} value={Continent}>
-          {Continents.map((item) => (
+        <label className={styles.title}>ItemType</label>
+        <select
+          className={styles.select}
+          onChange={itemTypeChangeHandler}
+          value={ItemType}
+        >
+          {itemTypes.map((item) => (
             <option key={item.key} value={item.key}>
               {item.value}
             </option>
@@ -105,7 +276,12 @@ function UploadProductPage(props) {
         {/* Continent이 숫자 받는걸로햇기때문에 option의 value도 key로 가준다! */}
         <br />
         <br />
-        <button type="submit">확인</button>
+
+        <div className={styles.btnBox}>
+          <button className={styles.btn} type="submit">
+            Submit
+          </button>
+        </div>
       </Form>
     </div>
   );

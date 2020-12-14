@@ -8,6 +8,7 @@ import {
 import UserCardBlock from "./Sections/UserCardBlock";
 import { Empty, Result } from "antd";
 import Paypal from "../../utils/Paypal";
+import styles from "./CartPage.module.css";
 
 function CartPage(props) {
   const dispatch = useDispatch();
@@ -69,7 +70,7 @@ function CartPage(props) {
   };
 
   return (
-    <div style={{ width: "85%", margin: "3rem auto" }}>
+    <div style={{ width: "85%", margin: "3rem auto", marginTop: "-1%" }}>
       <h1>My Cart</h1>
 
       <div>
@@ -80,19 +81,28 @@ function CartPage(props) {
       </div>
 
       {ShowTotal ? (
-        <div style={{ marginTop: "3rem" }}>
-          <h2>Total Amount: ${Total}</h2>
+        <div style={{ marginTop: "3rem", textAlign: "right" }}>
+          <h2>
+            Total Amount: <span className={styles.total}>{Total} USD</span>
+          </h2>
         </div>
       ) : ShowSuccess ? (
         <Result status="success" title="Successfully Purchased Items" />
       ) : (
+        //Result antd 결제 성공후 메세지띄우기
         <>
+          <br />
           <br />
           <Empty description={false} />
         </>
       )}
 
-      {ShowTotal && <Paypal total={Total} onSuccess={transactionSuccess} />}
+      {ShowTotal && (
+        <div className={styles.paypal}>
+          <Paypal total={Total} onSuccess={transactionSuccess} />
+        </div>
+      )}
+      {/* util의 paypal에서 onsuccess를 받으면!! transactionSuccess를 작동시킨다! */}
     </div>
   );
 }

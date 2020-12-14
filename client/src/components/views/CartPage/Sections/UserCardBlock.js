@@ -1,5 +1,7 @@
 import React from "react";
 import "./UserCardBlock.css";
+// import styles from "./UserCardBlock.module.css";
+
 function UserCardBlock(props) {
   const renderCartImage = (images) => {
     if (images.length > 0) {

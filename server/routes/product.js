@@ -56,7 +56,7 @@ router.post("/products", (req, res) => {
   let term = req.body.searchTerm;
 
   let findArgs = {};
-
+  // console.log("req.body.filters", req.body.filters);
   for (let key in req.body.filters) {
     //선택된값들 차례대로 돌아간다!
     if (req.body.filters[key].length > 0) {
@@ -75,6 +75,7 @@ router.post("/products", (req, res) => {
         };
       } else {
         findArgs[key] = req.body.filters[key];
+        // console.log("findArgs", findArgs);
       }
       // console.log("ARGs!", findArgs);
     }

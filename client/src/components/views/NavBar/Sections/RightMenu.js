@@ -5,7 +5,7 @@ import axios from "axios";
 import { USER_SERVER } from "../../../Config";
 import { withRouter } from "react-router-dom";
 import { useSelector } from "react-redux";
-
+import "./RightMenu.css";
 function RightMenu(props) {
   const user = useSelector((state) => state.user);
 
@@ -18,15 +18,15 @@ function RightMenu(props) {
       }
     });
   };
-
+  console.log(user);
   if (user.userData && !user.userData.isAuth) {
     return (
       <Menu mode={props.mode}>
         <Menu.Item key="mail">
-          <a href="/login">Signin</a>
+          <a href="/login">LogIn</a>
         </Menu.Item>
         <Menu.Item key="app">
-          <a href="/register">Signup</a>
+          <a href="/register">SignUp</a>
         </Menu.Item>
       </Menu>
     );
@@ -36,11 +36,14 @@ function RightMenu(props) {
         <Menu.Item key="history">
           <a href="/history">History</a>
         </Menu.Item>
-
-        <Menu.Item key="upload">
-          <a href="/product/upload">Upload</a>
+        {user.userData && user.userData.role === 0 && (
+          <Menu.Item key="upload">
+            <a href="/product/upload">Upload</a>
+          </Menu.Item>
+        )}
+        <Menu.Item key="logout">
+          <a onClick={logoutHandler}>LogOut</a>
         </Menu.Item>
-
         <Menu.Item key="cart" style={{ paddingBottom: 3, paddingRight: 20 }}>
           {/* Badge가 카트 숫자 갯수 올려줌! */}
           <Badge count={user.userData && user.userData.cart.length}>
@@ -55,10 +58,6 @@ function RightMenu(props) {
               />
             </a>
           </Badge>
-        </Menu.Item>
-
-        <Menu.Item key="logout">
-          <a onClick={logoutHandler}>Logout</a>
         </Menu.Item>
       </Menu>
     );
